@@ -1,0 +1,37 @@
+# Application settings
+port: 8082
+base_path: "/api/v1/registry"
+address: "0.0.0.0"
+log_level: "debug"
+log_format: "text"
+log_to_stderr: true
+log_to_file: false
+log_file_path: "./logs/capability_registry.log"
+
+# Auth0 OAuth Configuration
+auth:
+    auth_domain: "your-auth0-domain.auth0.com"
+    auth_audience: "https://your-api-audience.com"
+    auth_client_id: "your-client-id"
+    scopes: "read:registry write:registry admin:registry"
+    username: "capability_registry_service"
+    password: "your-password"
+
+# MongoDB Configuration
+mongo:
+    mongo_uri: "mongodb://localhost:27017"
+    mongo_database: "capability_registry"
+    mongo_user: "admin"
+    mongo_password: "your-mongo-password"
+
+# Event Bus Configuration
+event_bus:
+    event_bus_endpoint: "ws://localhost:9000/ws"
+    event_bus_group_id: "capability_registry_service"
+    concurrency_limit: 10
+
+# Registry Signing Configuration (Ed25519)
+signing:
+    private_key_path: "./keys/registry_signing_key.pem"
+    public_key_path: "./keys/registry_signing_key.pub"
+    key_id: "registry-key-001"

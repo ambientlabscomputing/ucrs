@@ -1,0 +1,41 @@
+# Binaries and build artifacts
+service/capability_registry_service
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Config files with secrets
+config.yaml
+config.yml
+
+# Logs
+logs/
+*.log
+
+# Keys and certificates
+keys/
+*.pem
+*.key
+*.pub
+*.crt
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Dependencies
+vendor/
+
+# Test coverage
+coverage.out
+coverage.html
