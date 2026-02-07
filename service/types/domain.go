@@ -46,12 +46,19 @@ const (
 	ArtifactPyPI   ArtifactType = "pypi"   // Python package
 )
 
+// PlatformSpec represents a specific OS/architecture combination
+type PlatformSpec struct {
+	OS   string `json:"os" bson:"os"`     // e.g., "darwin", "linux", "windows"
+	Arch string `json:"arch" bson:"arch"` // e.g., "amd64", "arm64"
+}
+
 // Artifact represents the location and integrity data for a provider artifact
 type Artifact struct {
-	Type      ArtifactType       `json:"type" bson:"type"`
-	URI       string             `json:"uri" bson:"uri"`                                 // e.g., "registry.underleaf.io/ambient/hue-mcp:2.1.0" or template with {os}/{arch}
-	Digest    string             `json:"digest" bson:"digest"`                           // e.g., "sha256:..." (for single-platform artifacts)
-	Checksums *ChecksumsArtifact `json:"checksums,omitempty" bson:"checksums,omitempty"` // For multi-platform binaries
+	Type               ArtifactType       `json:"type" bson:"type"`
+	URI                string             `json:"uri" bson:"uri"`                                                     // e.g., "registry.underleaf.io/ambient/hue-mcp:2.1.0" or template with {os}/{arch}/{version}
+	Digest             string             `json:"digest,omitempty" bson:"digest,omitempty"`                           // e.g., "sha256:..." (for single-platform artifacts)
+	Checksums          *ChecksumsArtifact `json:"checksums,omitempty" bson:"checksums,omitempty"`                     // For multi-platform binaries
+	SupportedPlatforms []PlatformSpec     `json:"supported_platforms,omitempty" bson:"supported_platforms,omitempty"` // Platforms this binary supports (empty = platform-agnostic)
 }
 
 // ChecksumsArtifact points to a checksums file for multi-platform binaries
@@ -71,6 +78,7 @@ type RuntimeRequirements struct {
 	Secrets        []string          `json:"secrets,omitempty" bson:"secrets,omitempty"`                 // e.g., ["hue_api_key"]
 	Env            map[string]string `json:"env,omitempty" bson:"env,omitempty"`                         // Environment variables
 	Args           []string          `json:"args,omitempty" bson:"args,omitempty"`                       // Command-line arguments for binary providers
+	Port           int               `json:"port,omitempty" bson:"port,omitempty"`                       // Port the provider listens on
 	HealthEndpoint string            `json:"health_endpoint,omitempty" bson:"health_endpoint,omitempty"` // HTTP health check endpoint (e.g., "http://localhost:8080/health")
 }
 

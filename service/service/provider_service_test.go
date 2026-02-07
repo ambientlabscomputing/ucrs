@@ -109,7 +109,7 @@ func TestProviderService_Create(t *testing.T) {
 			},
 		}
 
-		svc := NewProviderService(mockRepo, settings)
+		svc := NewProviderService(mockRepo, settings, nil)
 
 		req := &types.CreateProviderRequest{
 			ProviderID:     "test.provider",
@@ -156,7 +156,7 @@ func TestProviderService_Create(t *testing.T) {
 			},
 		}
 
-		svc := NewProviderService(mockRepo, settings)
+		svc := NewProviderService(mockRepo, settings, nil)
 
 		req := &types.CreateProviderRequest{
 			ProviderID:     "test.provider",
@@ -201,7 +201,7 @@ func TestProviderService_Get(t *testing.T) {
 			},
 		}
 
-		svc := NewProviderService(mockRepo, settings)
+		svc := NewProviderService(mockRepo, settings, nil)
 
 		result, err := svc.Get(ctx, "test.provider", "1.0.0")
 		if err != nil {
@@ -230,7 +230,7 @@ func TestProviderService_Get(t *testing.T) {
 			},
 		}
 
-		svc := NewProviderService(mockRepo, settings)
+		svc := NewProviderService(mockRepo, settings, nil)
 
 		result, err := svc.Get(ctx, "nonexistent", "1.0.0")
 		if err != nil {
@@ -271,7 +271,7 @@ func TestProviderService_Update(t *testing.T) {
 			},
 		}
 
-		svc := NewProviderService(mockRepo, settings)
+		svc := NewProviderService(mockRepo, settings, nil)
 
 		newTier := types.TrustCertified
 		req := &types.UpdateProviderRequest{
@@ -305,7 +305,7 @@ func TestProviderService_Update(t *testing.T) {
 			},
 		}
 
-		svc := NewProviderService(mockRepo, settings)
+		svc := NewProviderService(mockRepo, settings, nil)
 
 		newTier := types.TrustCertified
 		req := &types.UpdateProviderRequest{
@@ -340,7 +340,7 @@ func TestProviderService_Delete(t *testing.T) {
 			},
 		}
 
-		svc := NewProviderService(mockRepo, settings)
+		svc := NewProviderService(mockRepo, settings, nil)
 
 		err := svc.Delete(ctx, "test.provider", "1.0.0")
 		if err != nil {
@@ -376,7 +376,7 @@ func TestProviderService_List(t *testing.T) {
 			},
 		}
 
-		svc := NewProviderService(mockRepo, settings)
+		svc := NewProviderService(mockRepo, settings, nil)
 
 		results, total, err := svc.List(ctx, 10, 0)
 		if err != nil {
@@ -411,7 +411,7 @@ func TestProviderService_Query(t *testing.T) {
 			},
 		}
 
-		svc := NewProviderService(mockRepo, settings)
+		svc := NewProviderService(mockRepo, settings, nil)
 
 		tier := types.TrustOfficial
 		req := &types.QueryProvidersRequest{

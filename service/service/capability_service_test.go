@@ -158,7 +158,7 @@ func TestCapabilityService_Create(t *testing.T) {
 			},
 		}
 
-		svc := NewCapabilityService(mockRepo, settings)
+		svc := NewCapabilityService(mockRepo, settings, nil)
 
 		req := &types.CreateCapabilityRequest{
 			ID:              "test.capability",
@@ -209,7 +209,7 @@ func TestCapabilityService_Create(t *testing.T) {
 			},
 		}
 
-		svc := NewCapabilityService(mockRepo, settings)
+		svc := NewCapabilityService(mockRepo, settings, nil)
 
 		req := &types.CreateCapabilityRequest{
 			ID:              "test.capability",
@@ -256,7 +256,7 @@ func TestCapabilityService_Get(t *testing.T) {
 			},
 		}
 
-		svc := NewCapabilityService(mockRepo, settings)
+		svc := NewCapabilityService(mockRepo, settings, nil)
 
 		result, err := svc.Get(ctx, "test.capability")
 		if err != nil {
@@ -285,7 +285,7 @@ func TestCapabilityService_Get(t *testing.T) {
 			},
 		}
 
-		svc := NewCapabilityService(mockRepo, settings)
+		svc := NewCapabilityService(mockRepo, settings, nil)
 
 		result, err := svc.Get(ctx, "nonexistent")
 		if err != nil {
@@ -307,7 +307,7 @@ func TestCapabilityService_Get(t *testing.T) {
 			},
 		}
 
-		svc := NewCapabilityService(mockRepo, settings)
+		svc := NewCapabilityService(mockRepo, settings, nil)
 
 		_, err := svc.Get(ctx, "test.capability")
 		if err == nil {
@@ -350,7 +350,7 @@ func TestCapabilityService_Update(t *testing.T) {
 			},
 		}
 
-		svc := NewCapabilityService(mockRepo, settings)
+		svc := NewCapabilityService(mockRepo, settings, nil)
 
 		newDesc := "New description"
 		newRisk := types.RiskHigh
@@ -390,7 +390,7 @@ func TestCapabilityService_Update(t *testing.T) {
 			},
 		}
 
-		svc := NewCapabilityService(mockRepo, settings)
+		svc := NewCapabilityService(mockRepo, settings, nil)
 
 		newDesc := "New description"
 		req := &types.UpdateCapabilityRequest{
@@ -428,7 +428,7 @@ func TestCapabilityService_Update(t *testing.T) {
 			},
 		}
 
-		svc := NewCapabilityService(mockRepo, settings)
+		svc := NewCapabilityService(mockRepo, settings, nil)
 
 		newVerbs := []string{"read", "write", "delete"}
 		req := &types.UpdateCapabilityRequest{
@@ -472,7 +472,7 @@ func TestCapabilityService_Delete(t *testing.T) {
 			},
 		}
 
-		svc := NewCapabilityService(mockRepo, settings)
+		svc := NewCapabilityService(mockRepo, settings, nil)
 
 		err := svc.Delete(ctx, "test.capability")
 		if err != nil {
@@ -494,7 +494,7 @@ func TestCapabilityService_Delete(t *testing.T) {
 			},
 		}
 
-		svc := NewCapabilityService(mockRepo, settings)
+		svc := NewCapabilityService(mockRepo, settings, nil)
 
 		err := svc.Delete(ctx, "test.capability")
 		if err == nil {
@@ -526,7 +526,7 @@ func TestCapabilityService_List(t *testing.T) {
 			},
 		}
 
-		svc := NewCapabilityService(mockRepo, settings)
+		svc := NewCapabilityService(mockRepo, settings, nil)
 
 		results, total, err := svc.List(ctx, 10, 0)
 		if err != nil {
@@ -559,7 +559,7 @@ func TestCapabilityService_List(t *testing.T) {
 			},
 		}
 
-		svc := NewCapabilityService(mockRepo, settings)
+		svc := NewCapabilityService(mockRepo, settings, nil)
 
 		_, _, err := svc.List(ctx, 25, 50)
 		if err != nil {
@@ -594,7 +594,7 @@ func TestCapabilityService_Query(t *testing.T) {
 			},
 		}
 
-		svc := NewCapabilityService(mockRepo, settings)
+		svc := NewCapabilityService(mockRepo, settings, nil)
 
 		riskClass := types.RiskHigh
 		req := &types.QueryCapabilitiesRequest{

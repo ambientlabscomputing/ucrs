@@ -11,12 +11,25 @@ import (
 type CapabilityService struct {
 	repo     repository.Repository
 	settings *utils.Settings
+	sync     *SyncService
 }
 
-func NewCapabilityService(repo repository.Repository, settings *utils.Settings) *CapabilityService {
+func NewCapabilityService(repo repository.Repository, settings *utils.Settings, sync *SyncService) *CapabilityService {
 	return &CapabilityService{
 		repo:     repo,
 		settings: settings,
+		sync:     sync,
+	}
+}
+
+func (s *CapabilityService) refreshSnapshot(ctx context.Context) {
+	if s.sync == nil {
+		return
+	}
+
+	logger := utils.GetLogger(ctx)
+	if _, err := s.sync.GenerateSnapshot(ctx); err != nil {
+		logger.Error("failed to regenerate snapshot", "error", err)
 	}
 }
 
@@ -37,6 +50,8 @@ func (s *CapabilityService) Create(ctx context.Context, req *types.CreateCapabil
 		logger.Error("failed to create capability", "error", err, "id", req.ID)
 		return nil, err
 	}
+
+	s.refreshSnapshot(ctx)
 
 	logger.Info("capability created", "id", capability.ID, "version", capability.Version)
 	return capability, nil
@@ -95,6 +110,8 @@ func (s *CapabilityService) Update(ctx context.Context, id string, req *types.Up
 		return nil, err
 	}
 
+	s.refreshSnapshot(ctx)
+
 	logger.Info("capability updated", "id", capability.ID)
 	return capability, nil
 }
@@ -106,6 +123,8 @@ func (s *CapabilityService) Delete(ctx context.Context, id string) error {
 		logger.Error("failed to delete capability", "error", err, "id", id)
 		return err
 	}
+
+	s.refreshSnapshot(ctx)
 
 	logger.Info("capability deleted", "id", id)
 	return nil

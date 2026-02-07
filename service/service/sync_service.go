@@ -138,9 +138,10 @@ func (s *SyncService) computeETag(snapshot *types.RegistrySnapshot) string {
 
 func (s *SyncService) signSnapshot(snapshot *types.RegistrySnapshot) error {
 	// Create a signature payload from the snapshot
+	// Always use UTC to ensure consistent payload after MongoDB roundtrip
 	payload := fmt.Sprintf("%s:%s:%d:%d",
 		snapshot.Version,
-		snapshot.Timestamp.Format(time.RFC3339),
+		snapshot.Timestamp.UTC().Format(time.RFC3339),
 		len(snapshot.Capabilities),
 		len(snapshot.Providers))
 
@@ -160,9 +161,10 @@ func (s *SyncService) signSnapshot(snapshot *types.RegistrySnapshot) error {
 
 func (s *SyncService) VerifySignature(snapshot *types.RegistrySnapshot) bool {
 	// Reconstruct the payload
+	// Always use UTC to ensure consistent payload after MongoDB roundtrip
 	payload := fmt.Sprintf("%s:%s:%d:%d",
 		snapshot.Version,
-		snapshot.Timestamp.Format(time.RFC3339),
+		snapshot.Timestamp.UTC().Format(time.RFC3339),
 		len(snapshot.Capabilities),
 		len(snapshot.Providers))
 

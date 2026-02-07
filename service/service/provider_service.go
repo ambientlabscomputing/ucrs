@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
 	"github.com/ambientlabscomputing/underleaf/capability_registry_service/repository"
 	"github.com/ambientlabscomputing/underleaf/capability_registry_service/types"
@@ -11,17 +13,82 @@ import (
 type ProviderService struct {
 	repo     repository.Repository
 	settings *utils.Settings
+	sync     *SyncService
 }
 
-func NewProviderService(repo repository.Repository, settings *utils.Settings) *ProviderService {
+func NewProviderService(repo repository.Repository, settings *utils.Settings, sync *SyncService) *ProviderService {
 	return &ProviderService{
 		repo:     repo,
 		settings: settings,
+		sync:     sync,
 	}
+}
+
+func (s *ProviderService) refreshSnapshot(ctx context.Context) {
+	if s.sync == nil {
+		return
+	}
+
+	logger := utils.GetLogger(ctx)
+	if _, err := s.sync.GenerateSnapshot(ctx); err != nil {
+		logger.Error("failed to regenerate snapshot", "error", err)
+	}
+}
+
+// validateArtifact validates artifact configuration for binary providers
+func (s *ProviderService) validateArtifact(ctx context.Context, artifact *types.Artifact) error {
+	logger := utils.GetLogger(ctx)
+
+	// Only binary artifacts need platform validation
+	if artifact.Type != types.ArtifactBinary {
+		return nil
+	}
+
+	hasOSPlaceholder := strings.Contains(artifact.URI, "{os}")
+	hasArchPlaceholder := strings.Contains(artifact.URI, "{arch}")
+	hasTemplates := hasOSPlaceholder || hasArchPlaceholder
+
+	// If URI contains platform templates, require supported_platforms
+	if hasTemplates && len(artifact.SupportedPlatforms) == 0 {
+		return fmt.Errorf("binary artifact with {os}/{arch} templates must declare supported_platforms")
+	}
+
+	// If no templates but supported_platforms declared, warn (unusual but valid for single-platform binaries)
+	if !hasTemplates && len(artifact.SupportedPlatforms) > 0 {
+		logger.Warn("artifact has supported_platforms but URI has no {os}/{arch} templates - this may be intentional for single-platform binaries")
+	}
+
+	// Validate supported_platforms entries
+	validOSes := map[string]bool{"darwin": true, "linux": true, "windows": true}
+	validArches := map[string]bool{"amd64": true, "arm64": true, "386": true, "arm": true}
+
+	for _, platform := range artifact.SupportedPlatforms {
+		if !validOSes[platform.OS] {
+			return fmt.Errorf("unsupported OS in supported_platforms: %s (valid: darwin, linux, windows)", platform.OS)
+		}
+		if !validArches[platform.Arch] {
+			return fmt.Errorf("unsupported architecture in supported_platforms: %s (valid: amd64, arm64, 386, arm)", platform.Arch)
+		}
+	}
+
+	// If multi-platform (>1 entry), require checksums for verification
+	if len(artifact.SupportedPlatforms) > 1 {
+		if artifact.Checksums == nil || artifact.Checksums.URI == "" {
+			return fmt.Errorf("multi-platform binary artifacts must provide a checksums.uri for verification")
+		}
+	}
+
+	return nil
 }
 
 func (s *ProviderService) Create(ctx context.Context, req *types.CreateProviderRequest) (*types.Provider, error) {
 	logger := utils.GetLogger(ctx)
+
+	// Validate artifact configuration
+	if err := s.validateArtifact(ctx, &req.Artifact); err != nil {
+		logger.Error("artifact validation failed", "error", err, "provider_id", req.ProviderID)
+		return nil, fmt.Errorf("invalid artifact: %w", err)
+	}
 
 	provider := &types.Provider{
 		ProviderID:          req.ProviderID,
@@ -40,6 +107,8 @@ func (s *ProviderService) Create(ctx context.Context, req *types.CreateProviderR
 		logger.Error("failed to create provider", "error", err, "provider_id", req.ProviderID)
 		return nil, err
 	}
+
+	s.refreshSnapshot(ctx)
 
 	logger.Info("provider created", "provider_id", provider.ProviderID, "version", provider.Version)
 	return provider, nil
@@ -78,6 +147,11 @@ func (s *ProviderService) Update(ctx context.Context, providerID, version string
 
 	// Apply updates
 	if req.Artifact != nil {
+		// Validate artifact before applying
+		if err := s.validateArtifact(ctx, req.Artifact); err != nil {
+			logger.Error("artifact validation failed", "error", err, "provider_id", providerID)
+			return nil, fmt.Errorf("invalid artifact: %w", err)
+		}
 		provider.Artifact = *req.Artifact
 	}
 	if req.TrustTier != nil {
@@ -104,6 +178,8 @@ func (s *ProviderService) Update(ctx context.Context, providerID, version string
 		return nil, err
 	}
 
+	s.refreshSnapshot(ctx)
+
 	logger.Info("provider updated", "provider_id", provider.ProviderID)
 	return provider, nil
 }
@@ -115,6 +191,8 @@ func (s *ProviderService) Delete(ctx context.Context, providerID, version string
 		logger.Error("failed to delete provider", "error", err, "provider_id", providerID, "version", version)
 		return err
 	}
+
+	s.refreshSnapshot(ctx)
 
 	logger.Info("provider deleted", "provider_id", providerID, "version", version)
 	return nil

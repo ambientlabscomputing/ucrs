@@ -52,9 +52,11 @@ func (r *AppRouter) setupRoutes(ctx context.Context) {
 		c.JSON(200, gin.H{"status": "ok"})
 	})
 
-	// Sync endpoints (read-only, requires read:registry scope)
+	// Public key endpoint (no auth) - for signature verification
+	r.engine.GET(basePath+"/public-key", r.GetPublicKeyHandler())
+
+	// Sync endpoints (read-only, PUBLIC - no auth required)
 	syncGroup := r.engine.Group(basePath + "/sync")
-	syncGroup.Use(ReadAuthMiddleware(ctx, r.settings))
 	{
 		syncGroup.GET("/snapshot", r.GetSnapshotHandler())
 		syncGroup.GET("/delta", r.GetDeltaHandler())
@@ -63,9 +65,9 @@ func (r *AppRouter) setupRoutes(ctx context.Context) {
 	// Capability endpoints
 	capabilitiesGroup := r.engine.Group(basePath + "/capabilities")
 	{
-		// Read operations (read:registry scope)
-		capabilitiesGroup.GET("", ReadAuthMiddleware(ctx, r.settings), r.ListCapabilitiesHandler())
-		capabilitiesGroup.GET("/:id", ReadAuthMiddleware(ctx, r.settings), r.GetCapabilityHandler())
+		// Read operations (PUBLIC - no auth)
+		capabilitiesGroup.GET("", r.ListCapabilitiesHandler())
+		capabilitiesGroup.GET("/:id", r.GetCapabilityHandler())
 
 		// Write operations (write:registry scope)
 		capabilitiesGroup.POST("", WriteAuthMiddleware(ctx, r.settings), r.CreateCapabilityHandler())
@@ -76,9 +78,9 @@ func (r *AppRouter) setupRoutes(ctx context.Context) {
 	// Provider endpoints
 	providersGroup := r.engine.Group(basePath + "/providers")
 	{
-		// Read operations (read:registry scope)
-		providersGroup.GET("", ReadAuthMiddleware(ctx, r.settings), r.ListProvidersHandler())
-		providersGroup.GET("/:provider_id/:version", ReadAuthMiddleware(ctx, r.settings), r.GetProviderHandler())
+		// Read operations (PUBLIC - no auth)
+		providersGroup.GET("", r.ListProvidersHandler())
+		providersGroup.GET("/:provider_id/:version", r.GetProviderHandler())
 
 		// Write operations (write:registry scope)
 		providersGroup.POST("", WriteAuthMiddleware(ctx, r.settings), r.CreateProviderHandler())

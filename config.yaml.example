@@ -31,7 +31,15 @@ event_bus:
     concurrency_limit: 10
 
 # Registry Signing Configuration (Ed25519)
+# Run 'make generate-keys' to create signing keys before first run
 signing:
-    private_key_path: "./keys/registry_signing_key.pem"
+    key_id: "registry-key-001"
+    private_key_path: "/absolute/path/to/keys/registry_signing_key.pem"
+    public_key_path: "/absolute/path/to/keys/registry_signing_key.pub"
     public_key_path: "./keys/registry_signing_key.pub"
     key_id: "registry-key-001"
+
+# Snapshot behavior
+snapshot:
+    # Regenerate the registry snapshot at startup (useful for local/dev)
+    regenerate_on_start: false

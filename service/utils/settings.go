@@ -109,6 +109,7 @@ type Settings struct {
 	Mongo    MongoConfig    `yaml:"mongo"`
 	EventBus EventBusConfig `yaml:"event_bus"`
 	Signing  SigningConfig  `yaml:"signing"`
+	Snapshot SnapshotConfig `yaml:"snapshot"`
 }
 
 type AuthConfig struct {
@@ -136,6 +137,10 @@ type SigningConfig struct {
 	PrivateKeyPath string `yaml:"private_key_path"`
 	PublicKeyPath  string `yaml:"public_key_path"`
 	KeyID          string `yaml:"key_id"`
+}
+
+type SnapshotConfig struct {
+	RegenerateOnStart bool `yaml:"regenerate_on_start"`
 }
 
 type SecretString string
