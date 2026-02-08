@@ -2,12 +2,9 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"log"
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
 	"github.com/ambientlabscomputing/underleaf/capability_registry_service/repository"
 	"github.com/ambientlabscomputing/underleaf/capability_registry_service/router"
@@ -66,8 +63,8 @@ func main() {
 	}()
 
 	// Initialize repository
-	repo := repository.NewMongoRepository(mongoClient.Database(settings.Mongo.Database))
-	logger.Info("initialized MongoDB repository", "database", settings.Mongo.Database)
+	repo := repository.NewMongoRepository(mongoClient.Database(settings.Mongo.MongoDatabase))
+	logger.Info("initialized MongoDB repository", "database", settings.Mongo.MongoDatabase)
 
 	// Load seed data
 	seedLoader := seeder.NewSeeder(repo, settings.Environment)
@@ -129,50 +126,27 @@ func main() {
 // buildMongoClient creates and connects a MongoDB client
 func buildMongoClient(ctx context.Context, settings *utils.Settings) (*mongo.Client, error) {
 	logger := utils.GetLogger(ctx)
-	logger.Info("connecting to MongoDB", "uri", settings.Mongo.URI)
+	mongoURI := settings.Mongo.MongoURI
+	username := settings.Mongo.MongoUser
+	password := settings.Mongo.MongoPassword
 
-	// Build connection string with credentials
-	mongoURI := settings.Mongo.URI
-	if settings.Mongo.Username != "" && settings.Mongo.Password != "" {
-		clientOpts := options.Client().
-			ApplyURI(mongoURI).
-			SetAuth(options.Credential{
-				Username: settings.Mongo.Username,
-				Password: settings.Mongo.Password.Value(),
-			}).
-			SetConnectTimeout(10 * time.Second).
-			SetServerSelectionTimeout(10 * time.Second)
-
-		client, err := mongo.Connect(ctx, clientOpts)
-		if err != nil {
-			return nil, fmt.Errorf("failed to connect to MongoDB: %w", err)
-		}
-
-		// Ping to verify connection
-		if err := client.Ping(ctx, nil); err != nil {
-			return nil, fmt.Errorf("failed to ping MongoDB: %w", err)
-		}
-
-		log.Println("connected to MongoDB successfully")
-		return client, nil
+	clientOptions := options.Client().ApplyURI(mongoURI)
+	creds := options.Credential{
+		Username: username,
+		Password: string(password),
 	}
+	clientOptions.SetAuth(creds)
 
-	// No authentication
-	clientOpts := options.Client().
-		ApplyURI(mongoURI).
-		SetConnectTimeout(10 * time.Second).
-		SetServerSelectionTimeout(10 * time.Second)
-
-	client, err := mongo.Connect(ctx, clientOpts)
+	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
-		return nil, fmt.Errorf("failed to connect to MongoDB: %w", err)
+		logger.Error("failed to connect to MongoDB", "error", err)
+		return nil, err
 	}
-
-	// Ping to verify connection
-	if err := client.Ping(ctx, nil); err != nil {
-		return nil, fmt.Errorf("failed to ping MongoDB: %w", err)
+	err = client.Ping(ctx, nil)
+	if err != nil {
+		logger.Error("failed to ping MongoDB", "error", err)
+		return nil, err
 	}
-
-	log.Println("connected to MongoDB successfully (no auth)")
+	logger.Info("successfully connected and pinged MongoDB")
 	return client, nil
 }

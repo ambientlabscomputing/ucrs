@@ -124,10 +124,10 @@ type AuthConfig struct {
 }
 
 type MongoConfig struct {
-	URI      string       `yaml:"uri"`
-	Username string       `yaml:"username"`
-	Password SecretString `yaml:"password"`
-	Database string       `yaml:"database"`
+	MongoURI      string       `yaml:"mongo_uri"`
+	MongoDatabase string       `yaml:"mongo_database"`
+	MongoUser     string       `yaml:"mongo_user"`
+	MongoPassword SecretString `yaml:"mongo_password"`
 }
 
 type EventBusConfig struct {

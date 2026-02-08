@@ -90,10 +90,10 @@ auth:
   password: "test-pass"
   scopes: "read:test"
 mongo:
-  uri: "mongodb://localhost:27017"
-  username: "test"
-  password: "test"
-  database: "test_db"
+  mongo_uri: "mongodb://localhost:27017"
+  mongo_user: "test"
+  mongo_password: "test"
+  mongo_database: "test_db"
 event_bus:
   enabled: false
   url: ""
@@ -143,8 +143,8 @@ signing:
 	if settings.Auth.AuthDomain != "test.auth0.com" {
 		t.Errorf("expected auth domain test.auth0.com, got %s", settings.Auth.AuthDomain)
 	}
-	if settings.Mongo.Database != "test_db" {
-		t.Errorf("expected database test_db, got %s", settings.Mongo.Database)
+	if settings.Mongo.MongoDatabase != "test_db" {
+		t.Errorf("expected database test_db, got %s", settings.Mongo.MongoDatabase)
 	}
 	if settings.Signing.KeyID != "test-key-001" {
 		t.Errorf("expected key ID test-key-001, got %s", settings.Signing.KeyID)
