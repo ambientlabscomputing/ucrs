@@ -10,14 +10,14 @@ WORKDIR /build
 RUN go install github.com/swaggo/swag/cmd/swag@v1.16.4
 
 # Copy dependency files first (best cache hit rate)
-COPY service/go.mod service/go.sum ./
+COPY ucrs/go.mod ucrs/go.sum ./
 
 # Download with cache mount for go modules
 RUN --mount=type=cache,target=/go/pkg/mod \
     go mod download
 
 # Copy source
-COPY service/ ./
+COPY ucrs/ ./
 
 # Generate docs
 RUN swag init -g main.go --output ./docs
