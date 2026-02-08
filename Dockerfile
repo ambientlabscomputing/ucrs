@@ -1,27 +1,32 @@
 # Build stage
 FROM golang:1.24-alpine AS builder
 
-# Install dependencies
-RUN apk add --no-cache git make ca-certificates
+# Install dependencies (minimal set)
+RUN apk add --no-cache git ca-certificates
 
 # Set working directory
 WORKDIR /build
 
-# Copy go.mod and go.sum
+# Install swag as a separate layer (better caching)
+RUN go install github.com/swaggo/swag/cmd/swag@v1.16.4
+
+# Copy go.mod and go.sum first (better layer caching)
 COPY service/go.mod service/go.sum ./
+
+# Download dependencies (cached if go.mod/sum unchanged)
 RUN go mod download
 
 # Copy source code
 COPY service/ ./
 
-# Install swag for documentation generation
-RUN go install github.com/swaggo/swag/cmd/swag@latest
-
 # Generate Swagger docs
 RUN swag init -g main.go --output ./docs
 
-# Build the binary
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o capability_registry_service main.go
+# Build with optimizations and parallel builds
+RUN CGO_ENABLED=0 GOOS=linux go build \
+    -ldflags="-w -s" \
+    -trimpath \
+    -o capability_registry_service main.go
 
 # Runtime stage
 FROM alpine:latest
