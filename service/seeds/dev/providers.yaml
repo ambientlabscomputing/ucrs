@@ -1,0 +1,38 @@
+providers:
+  - provider_id: underleaf.mma
+    version: dev
+    capabilities:
+      - id: mesh.event.routing
+        version_range: ^1.0
+      - id: mesh.service.discovery
+        version_range: ^1.0
+    artifact:
+      type: binary
+      uri: https://github.com/ambientlabscomputing/mycelium_mesh_agent/releases/download/{version}/mycelium-mesh-agent-{os}-{arch}
+      digest: ""
+      checksums:
+        uri: https://github.com/ambientlabscomputing/mycelium_mesh_agent/releases/download/{version}/checksums.txt
+      supported_platforms:
+        - os: darwin
+          arch: amd64
+        - os: darwin
+          arch: arm64
+        - os: linux
+          arch: amd64
+        - os: linux
+          arch: arm64
+        - os: windows
+          arch: amd64
+    trust_tier: official
+    sandbox_profile: standard
+    runtime_requirements:
+      args: []
+      health_endpoint: http://localhost:10080/health
+      network:
+        - lan
+      env:
+        MMA_HTTP_PORT: "10080"
+      port: 10080
+    description: Mycelium Mesh Agent - Event-driven mesh networking agent for service discovery and routing
+    homepage: https://github.com/ambientlabscomputing/mycelium_mesh_agent
+    maintainer: Ambient Labs

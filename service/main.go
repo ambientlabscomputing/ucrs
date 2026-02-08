@@ -11,6 +11,7 @@ import (
 
 	"github.com/ambientlabscomputing/underleaf/capability_registry_service/repository"
 	"github.com/ambientlabscomputing/underleaf/capability_registry_service/router"
+	"github.com/ambientlabscomputing/underleaf/capability_registry_service/seeder"
 	"github.com/ambientlabscomputing/underleaf/capability_registry_service/service"
 	"github.com/ambientlabscomputing/underleaf/capability_registry_service/utils"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -34,7 +35,7 @@ import (
 // @license.name Proprietary
 // @license.url https://ambientlabs.io/license
 
-// @host localhost:8082
+// @host localhost:8083
 // @BasePath /api/v1/registry
 
 // @securityDefinitions.apikey BearerAuth
@@ -67,6 +68,13 @@ func main() {
 	// Initialize repository
 	repo := repository.NewMongoRepository(mongoClient.Database(settings.Mongo.Database))
 	logger.Info("initialized MongoDB repository", "database", settings.Mongo.Database)
+
+	// Load seed data
+	seedLoader := seeder.NewSeeder(repo, settings.Environment)
+	if err := seedLoader.LoadSeeds(ctx); err != nil {
+		logger.Error("failed to load seeds", "error", err)
+		panic(err)
+	}
 
 	// Initialize service
 	svc, err := service.NewAppService(repo, settings)

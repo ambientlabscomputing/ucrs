@@ -10,7 +10,7 @@ import (
 )
 
 var Defaults = map[string]interface{}{
-	"Port":        "8082",
+	"Port":        "8083",
 	"Address":     "0.0.0.0",
 	"BasePath":    "/api/v1/registry",
 	"LogLevel":    "debug",
@@ -18,6 +18,7 @@ var Defaults = map[string]interface{}{
 	"LogToStderr": true,
 	"LogToFile":   false,
 	"LogFilePath": "./logs/capability_registry.log",
+	"Environment": "dev",
 }
 
 func LoadSettings() *Settings {
@@ -104,6 +105,7 @@ type Settings struct {
 	LogToStderr bool   `yaml:"log_to_stderr"`
 	LogToFile   bool   `yaml:"log_to_file"`
 	LogFilePath string `yaml:"log_file_path"`
+	Environment string `yaml:"environment"`
 
 	Auth     AuthConfig     `yaml:"auth"`
 	Mongo    MongoConfig    `yaml:"mongo"`

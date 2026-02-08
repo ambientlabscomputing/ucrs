@@ -1,5 +1,5 @@
 # Application settings
-port: 8082
+port: 8083
 base_path: "/api/v1/registry"
 address: "0.0.0.0"
 log_level: "debug"
@@ -7,6 +7,7 @@ log_format: "text"
 log_to_stderr: true
 log_to_file: false
 log_file_path: "./logs/capability_registry.log"
+environment: "dev"  # Options: "dev" or "prod" - determines which seed data to load
 
 # Auth0 OAuth Configuration
 auth:

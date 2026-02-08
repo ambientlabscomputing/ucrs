@@ -60,7 +60,7 @@ func setupRouter(t *testing.T) (*gin.Engine, *utils.Settings) {
 	gin.SetMode(gin.TestMode)
 
 	settings := &utils.Settings{
-		Port:        "8082",
+		Port:        "8083",
 		Address:     "0.0.0.0",
 		BasePath:    "/api/v1/registry",
 		LogLevel:    "error",

@@ -48,6 +48,6 @@ RUN mkdir -p /app/keys /app/logs && \
 
 USER appuser
 
-EXPOSE 8082
+EXPOSE 8083
 
 CMD ["./capability_registry_service"]

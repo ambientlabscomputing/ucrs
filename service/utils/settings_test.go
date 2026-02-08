@@ -152,8 +152,8 @@ signing:
 }
 
 func TestDefaults(t *testing.T) {
-	if Defaults["Port"] != "8082" {
-		t.Errorf("expected default port 8082, got %v", Defaults["Port"])
+	if Defaults["Port"] != "8083" {
+		t.Errorf("expected default port 8083, got %v", Defaults["Port"])
 	}
 	if Defaults["Address"] != "0.0.0.0" {
 		t.Errorf("expected default address 0.0.0.0, got %v", Defaults["Address"])

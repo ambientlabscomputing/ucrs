@@ -1,0 +1,20 @@
+capabilities:
+  - id: mesh.service.discovery
+    version: 1.0.0
+    description: Service discovery and registration in mesh network
+    risk_class: low
+    allowed_verbs:
+      - register
+      - discover
+      - query
+    permission_class: mesh.discovery
+
+  - id: mesh.event.routing
+    version: 1.0.0
+    description: Event routing and mesh networking capability
+    risk_class: medium
+    allowed_verbs:
+      - subscribe
+      - publish
+      - route
+    permission_class: mesh.network

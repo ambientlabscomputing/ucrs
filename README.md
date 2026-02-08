@@ -11,6 +11,22 @@ A cloud-native microservice providing the global semantic authority and provider
 - **ETag Caching**: HTTP caching support for bandwidth optimization
 - **Trust Tiers**: Classification system (official, certified, community, experimental, local)
 - **Multi-Artifact Support**: OCI containers, binaries, Git repos, npm, PyPI packages
+- **Automatic Seeding**: Git-managed seed data for capabilities and providers (dev/prod environments)
+
+## Seeding System
+
+UCRS automatically loads baseline capability and provider definitions from YAML files on startup. This allows you to:
+
+- Manage registry data through version control
+- Maintain separate seed data for dev and prod environments
+- Automatically update existing entries or create new ones
+- Ensure consistent baseline data across deployments
+
+**Included Seeds:**
+- **Capabilities**: `mesh.service.discovery`, `mesh.event.routing`
+- **Providers**: `underleaf.mma` (Mycelium Mesh Agent)
+
+See [SEEDING_GUIDE.md](SEEDING_GUIDE.md) for detailed documentation.
 
 ## Architecture
 
@@ -79,7 +95,7 @@ docker-compose up -d
 
 Once running, visit:
 ```
-http://localhost:8082/swagger/index.html
+http://localhost:8083/swagger/index.html
 ```
 
 ### Generate Documentation
@@ -122,7 +138,7 @@ make docs
 ### Create a Capability
 
 ```bash
-curl -X POST http://localhost:8082/api/v1/registry/capabilities \
+curl -X POST http://localhost:8083/api/v1/registry/capabilities \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -138,7 +154,7 @@ curl -X POST http://localhost:8082/api/v1/registry/capabilities \
 ### Register a Provider
 
 ```bash
-curl -X POST http://localhost:8082/api/v1/registry/providers \
+curl -X POST http://localhost:8083/api/v1/registry/providers \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
