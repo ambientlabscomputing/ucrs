@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	"github.com/ambientlabscomputing/underleaf/capability_registry_service/types"
+	"github.com/ambientlabscomputing/ucrs/types"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 

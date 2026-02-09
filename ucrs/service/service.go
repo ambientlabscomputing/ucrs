@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ambientlabscomputing/underleaf/capability_registry_service/repository"
-	"github.com/ambientlabscomputing/underleaf/capability_registry_service/utils"
+	"github.com/ambientlabscomputing/ucrs/repository"
+	"github.com/ambientlabscomputing/ucrs/utils"
 )
 
 // Service is the main service interface

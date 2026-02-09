@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/MicahParks/keyfunc/v3"
-	"github.com/ambientlabscomputing/underleaf/capability_registry_service/utils"
+	"github.com/ambientlabscomputing/ucrs/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"

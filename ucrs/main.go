@@ -6,11 +6,11 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/ambientlabscomputing/underleaf/capability_registry_service/repository"
-	"github.com/ambientlabscomputing/underleaf/capability_registry_service/router"
-	"github.com/ambientlabscomputing/underleaf/capability_registry_service/seeder"
-	"github.com/ambientlabscomputing/underleaf/capability_registry_service/service"
-	"github.com/ambientlabscomputing/underleaf/capability_registry_service/utils"
+	"github.com/ambientlabscomputing/ucrs/repository"
+	"github.com/ambientlabscomputing/ucrs/router"
+	"github.com/ambientlabscomputing/ucrs/seeder"
+	"github.com/ambientlabscomputing/ucrs/service"
+	"github.com/ambientlabscomputing/ucrs/utils"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )

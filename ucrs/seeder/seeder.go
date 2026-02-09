@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/ambientlabscomputing/underleaf/capability_registry_service/repository"
-	"github.com/ambientlabscomputing/underleaf/capability_registry_service/types"
-	"github.com/ambientlabscomputing/underleaf/capability_registry_service/utils"
+	"github.com/ambientlabscomputing/ucrs/repository"
+	"github.com/ambientlabscomputing/ucrs/types"
+	"github.com/ambientlabscomputing/ucrs/utils"
 	"gopkg.in/yaml.v3"
 )
 

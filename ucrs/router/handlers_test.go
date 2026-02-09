@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ambientlabscomputing/underleaf/capability_registry_service/service"
-	"github.com/ambientlabscomputing/underleaf/capability_registry_service/types"
-	"github.com/ambientlabscomputing/underleaf/capability_registry_service/utils"
+	"github.com/ambientlabscomputing/ucrs/service"
+	"github.com/ambientlabscomputing/ucrs/types"
+	"github.com/ambientlabscomputing/ucrs/utils"
 	"github.com/gin-gonic/gin"
 )
 

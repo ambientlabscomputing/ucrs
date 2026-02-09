@@ -3,8 +3,8 @@ package router
 import (
 	"context"
 
-	"github.com/ambientlabscomputing/underleaf/capability_registry_service/service"
-	"github.com/ambientlabscomputing/underleaf/capability_registry_service/utils"
+	"github.com/ambientlabscomputing/ucrs/service"
+	"github.com/ambientlabscomputing/ucrs/utils"
 	"github.com/gin-gonic/gin"
 )
 
