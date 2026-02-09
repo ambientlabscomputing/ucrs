@@ -35,12 +35,14 @@ event_bus:
 # Run 'make generate-keys' to create signing keys before first run
 signing:
     key_id: "registry-key-001"
-    private_key_path: "/absolute/path/to/keys/registry_signing_key.pem"
-    public_key_path: "/absolute/path/to/keys/registry_signing_key.pub"
+    private_key_path: "./keys/registry_signing_key.pem"
     public_key_path: "./keys/registry_signing_key.pub"
-    key_id: "registry-key-001"
 
 # Snapshot behavior
 snapshot:
     # Regenerate the registry snapshot at startup (useful for local/dev)
     regenerate_on_start: false
+
+# Seeds configuration
+seeds:
+    path: "seeds"  # Path to seeds directory (relative or absolute)

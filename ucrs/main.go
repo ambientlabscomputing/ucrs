@@ -67,7 +67,7 @@ func main() {
 	logger.Info("initialized MongoDB repository", "database", settings.Mongo.MongoDatabase)
 
 	// Load seed data
-	seedLoader := seeder.NewSeeder(repo, settings.Environment)
+	seedLoader := seeder.NewSeeder(repo, settings.Environment, settings.Seeds.Path)
 	if err := seedLoader.LoadSeeds(ctx); err != nil {
 		logger.Error("failed to load seeds", "error", err)
 		panic(err)

@@ -27,14 +27,21 @@ type Seeder struct {
 }
 
 // NewSeeder creates a new seeder instance
-func NewSeeder(repo repository.Repository, environment string) *Seeder {
+// Parameters:
+//   - repo: Repository instance for data persistence
+//   - environment: Environment name (e.g., "dev", "prod") for loading environment-specific seeds
+//   - seedsPath: Path to the seeds directory (relative or absolute). Defaults to "seeds" if empty
+func NewSeeder(repo repository.Repository, environment string, seedsPath string) *Seeder {
 	if environment == "" {
 		environment = "dev"
+	}
+	if seedsPath == "" {
+		seedsPath = "seeds"
 	}
 	return &Seeder{
 		repo:        repo,
 		environment: environment,
-		seedsPath:   "seeds",
+		seedsPath:   seedsPath,
 	}
 }
 

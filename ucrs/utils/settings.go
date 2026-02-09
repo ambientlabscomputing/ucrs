@@ -112,6 +112,7 @@ type Settings struct {
 	EventBus EventBusConfig `yaml:"event_bus"`
 	Signing  SigningConfig  `yaml:"signing"`
 	Snapshot SnapshotConfig `yaml:"snapshot"`
+	Seeds    SeedsConfig    `yaml:"seeds"`
 }
 
 type AuthConfig struct {
@@ -143,6 +144,10 @@ type SigningConfig struct {
 
 type SnapshotConfig struct {
 	RegenerateOnStart bool `yaml:"regenerate_on_start"`
+}
+
+type SeedsConfig struct {
+	Path string `yaml:"path"` // Path to seeds directory
 }
 
 type SecretString string
