@@ -1,4 +1,40 @@
 capabilities:
+  - id: deployment.lifecycle
+    version: 1.0.0
+    description: Manage application deployment lifecycle including creation, monitoring, and deletion
+    risk_class: high
+    allowed_verbs:
+      - create
+      - list
+      - delete
+      - status
+      - update
+    permission_class: deployment.control
+
+  - id: umc.supervisor
+    version: 1.0.0
+    description: Supervise and manage other Underleaf Micro-Components (UMCs)
+    risk_class: high
+    allowed_verbs:
+      - discover
+      - install
+      - start
+      - stop
+      - health
+    permission_class: umc.lifecycle
+
+  - id: scheduling.cron
+    version: 1.0.0
+    description: Schedule and execute distributed cron jobs
+    risk_class: medium
+    allowed_verbs:
+      - schedule
+      - execute
+      - stop
+      - list
+      - status
+    permission_class: scheduling.control
+
   - id: mesh.service.discovery
     version: 1.0.0
     description: Service discovery and registration in mesh network

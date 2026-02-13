@@ -1,4 +1,76 @@
 providers:
+  - provider_id: underleaf.deployment-engine
+    version: dev
+    capabilities:
+      - id: deployment.lifecycle
+        version_range: ^1.0
+      - id: umc.supervisor
+        version_range: ^1.0
+    artifact:
+      type: binary
+      uri: https://github.com/ambientlabscomputing/deployment_engine/releases/download/{version}/deployment_engine-{os}-{arch}
+      digest: ""
+      checksums:
+        uri: https://github.com/ambientlabscomputing/deployment_engine/releases/download/{version}/checksums.txt
+      supported_platforms:
+        - os: darwin
+          arch: amd64
+        - os: darwin
+          arch: arm64
+        - os: linux
+          arch: amd64
+        - os: linux
+          arch: arm64
+    trust_tier: official
+    sandbox_profile: standard
+    runtime_requirements:
+      args: []
+      health_endpoint: http://localhost:8080/health
+      network:
+        - localhost
+      env:
+        KERNEL_SOCKET: /tmp/ua_kernel.sock
+        LOG_LEVEL: info
+      port: 8080
+    description: Deployment Engine UMC - Manages deployment lifecycle and supervises sibling UMCs
+    homepage: https://github.com/ambientlabscomputing/underleaf
+    maintainer: Ambient Labs
+
+  - provider_id: underleaf.cron-engine
+    version: dev
+    capabilities:
+      - id: scheduling.cron
+        version_range: ^1.0
+    artifact:
+      type: binary
+      uri: https://github.com/ambientlabscomputing/cron_engine/releases/download/{version}/cron_engine-{os}-{arch}
+      digest: ""
+      checksums:
+        uri: https://github.com/ambientlabscomputing/cron_engine/releases/download/{version}/checksums.txt
+      supported_platforms:
+        - os: darwin
+          arch: amd64
+        - os: darwin
+          arch: arm64
+        - os: linux
+          arch: amd64
+        - os: linux
+          arch: arm64
+    trust_tier: official
+    sandbox_profile: standard
+    runtime_requirements:
+      args: []
+      health_endpoint: http://localhost:8080/health
+      network:
+        - localhost
+      env:
+        KERNEL_SOCKET: /tmp/ua_kernel.sock
+        LOG_LEVEL: info
+      port: 8080
+    description: Cron Engine UMC - Distributed cron job scheduling and execution
+    homepage: https://github.com/ambientlabscomputing/underleaf
+    maintainer: Ambient Labs
+
   - provider_id: underleaf.mma
     version: dev
     capabilities:
