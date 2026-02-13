@@ -25,13 +25,14 @@ providers:
     sandbox_profile: standard
     runtime_requirements:
       args: []
-      health_endpoint: http://localhost:8080/health
+      health_endpoint: http://localhost:10081/health
       network:
         - localhost
       env:
         KERNEL_SOCKET: /tmp/ua_kernel.sock
         LOG_LEVEL: info
-      port: 8080
+        PORT: "10081"
+      port: 10081
     description: Deployment Engine UMC - Manages deployment lifecycle and supervises sibling UMCs
     homepage: https://github.com/ambientlabscomputing/underleaf
     maintainer: Ambient Labs
@@ -60,13 +61,14 @@ providers:
     sandbox_profile: standard
     runtime_requirements:
       args: []
-      health_endpoint: http://localhost:8080/health
+      health_endpoint: http://localhost:10082/health
       network:
         - localhost
       env:
         KERNEL_SOCKET: /tmp/ua_kernel.sock
         LOG_LEVEL: info
-      port: 8080
+        PORT: "10082"
+      port: 10082
     description: Cron Engine UMC - Distributed cron job scheduling and execution
     homepage: https://github.com/ambientlabscomputing/underleaf
     maintainer: Ambient Labs
