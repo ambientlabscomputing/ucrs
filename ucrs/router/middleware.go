@@ -3,7 +3,10 @@ package router
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"net/http"
+	"runtime/debug"
+	"time"
 
 	"github.com/MicahParks/keyfunc/v3"
 	"github.com/ambientlabscomputing/ucrs/utils"
@@ -11,6 +14,61 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 )
+
+// SlogLoggerMiddleware replaces gin's default stdout logger with the app slog logger.
+func SlogLoggerMiddleware(appCtx context.Context) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		start := time.Now()
+		path := c.Request.URL.Path
+		if raw := c.Request.URL.RawQuery; raw != "" {
+			path = path + "?" + raw
+		}
+
+		c.Next()
+
+		latency := time.Since(start)
+		status := c.Writer.Status()
+		logger := utils.GetLogger(appCtx)
+
+		attrs := []slog.Attr{
+			slog.String("method", c.Request.Method),
+			slog.String("path", path),
+			slog.Int("status", status),
+			slog.Duration("latency", latency),
+			slog.String("client_ip", c.ClientIP()),
+			slog.Int("bytes", c.Writer.Size()),
+		}
+		if errs := c.Errors.ByType(gin.ErrorTypePrivate).String(); errs != "" {
+			attrs = append(attrs, slog.String("errors", errs))
+		}
+
+		switch {
+		case status >= 500:
+			logger.LogAttrs(appCtx, slog.LevelError, "request", attrs...)
+		case status >= 400:
+			logger.LogAttrs(appCtx, slog.LevelWarn, "request", attrs...)
+		default:
+			logger.LogAttrs(appCtx, slog.LevelInfo, "request", attrs...)
+		}
+	}
+}
+
+// SlogRecoveryMiddleware replaces gin.Recovery() so panics are captured via slog.
+func SlogRecoveryMiddleware(appCtx context.Context) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		defer func() {
+			if err := recover(); err != nil {
+				utils.GetLogger(appCtx).Error("panic recovered",
+					"error", err,
+					"stack", string(debug.Stack()),
+					"path", c.Request.URL.Path,
+				)
+				c.AbortWithStatus(http.StatusInternalServerError)
+			}
+		}()
+		c.Next()
+	}
+}
 
 var jwks keyfunc.Keyfunc
 

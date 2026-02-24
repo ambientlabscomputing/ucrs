@@ -19,9 +19,10 @@ func NewAppRouter(ctx context.Context, svc service.Service, settings *utils.Sett
 	engine := gin.New()
 
 	// Global middleware
-	engine.Use(gin.Recovery())
-	engine.Use(TraceIDMiddleware(ctx))
+	engine.Use(SlogRecoveryMiddleware(ctx))
+	engine.Use(SlogLoggerMiddleware(ctx))
 	engine.Use(CORSMiddleware())
+	engine.Use(TraceIDMiddleware(ctx))
 
 	router := &AppRouter{
 		engine:   engine,
