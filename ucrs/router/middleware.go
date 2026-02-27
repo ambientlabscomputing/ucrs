@@ -75,7 +75,12 @@ var jwks keyfunc.Keyfunc
 // TraceIDMiddleware adds a trace ID to each request's context
 func TraceIDMiddleware(appCtx context.Context) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		traceID := uuid.New().String()
+		// Check for existing trace ID in header
+		traceID := c.GetHeader("X-Trace-ID")
+		// If not found, generate a new one
+		if traceID == "" {
+			traceID = uuid.New().String()
+		}
 		ctx := utils.SetTraceID(c.Request.Context(), traceID)
 		logger := utils.GetLogger(appCtx).With("trace_id", traceID)
 		ctx = utils.WithLogger(ctx, logger)
@@ -92,9 +97,7 @@ func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With, X-Organization-ID")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, PATCH, DELETE")
-
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With, X-Organization-ID, X-Trace-ID")
 		if c.Request.Method == "OPTIONS" {
 			c.AbortWithStatus(http.StatusNoContent)
 			return

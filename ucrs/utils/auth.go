@@ -73,13 +73,16 @@ func (tm *AppTokenManager) fetchNewToken(ctx context.Context) error {
 		return err
 	}
 
-	req, err := http.NewRequest("POST", tokenURL, bytes.NewBuffer(payloadBytes))
+	req, err := http.NewRequestWithContext(ctx, "POST", tokenURL, bytes.NewBuffer(payloadBytes))
 	if err != nil {
 		logger.Error("failed to create new request", "error", err)
 		return err
 	}
 
 	req.Header.Set("Content-Type", "application/json")
+	if traceID := GetTraceID(ctx); traceID != "" {
+		req.Header.Set("X-Trace-ID", traceID)
+	}
 
 	resp, err := tm.client.Do(req)
 	if err != nil {
