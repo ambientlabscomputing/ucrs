@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/ambientlabscomputing/ucrs/types"
+	"github.com/ambientlabscomputing/ucrs/sdk/types"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"

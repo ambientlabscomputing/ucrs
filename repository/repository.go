@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	"github.com/ambientlabscomputing/ucrs/types"
+	"github.com/ambientlabscomputing/ucrs/sdk/types"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 

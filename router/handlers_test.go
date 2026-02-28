@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/ambientlabscomputing/ucrs/service"
-	"github.com/ambientlabscomputing/ucrs/types"
+	"github.com/ambientlabscomputing/ucrs/sdk/types"
 	"github.com/ambientlabscomputing/ucrs/utils"
 	"github.com/gin-gonic/gin"
 )

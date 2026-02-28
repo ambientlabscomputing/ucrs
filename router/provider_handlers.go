@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/ambientlabscomputing/ucrs/types"
+	"github.com/ambientlabscomputing/ucrs/sdk/types"
 	"github.com/ambientlabscomputing/ucrs/utils"
 	"github.com/gin-gonic/gin"
 )

@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/ambientlabscomputing/ucrs/repository"
-	"github.com/ambientlabscomputing/ucrs/types"
+	"github.com/ambientlabscomputing/ucrs/sdk/types"
 	"github.com/ambientlabscomputing/ucrs/utils"
 )
 
