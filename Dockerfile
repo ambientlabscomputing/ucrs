@@ -7,11 +7,11 @@ RUN apk add --no-cache --no-scripts git make
 WORKDIR /build
 
 # Copy go mod files
-COPY ucrs/go.mod ucrs/go.sum ./
+COPY go.mod go.sum ./
 RUN go mod download
 
 # Copy source code
-COPY ucrs/ ./
+COPY . ./
 
 # Generate swagger docs
 RUN go install github.com/swaggo/swag/cmd/swag@latest && \

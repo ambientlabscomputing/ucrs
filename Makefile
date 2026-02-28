@@ -11,39 +11,39 @@ help:
 ## generate-keys: Generate Ed25519 signing keys (only needs to be run once)
 generate-keys:
 	@echo "Generating Ed25519 signing keys..."
-	@cd ucrs && go run scripts/generate_keys.go
+	@go run scripts/generate_keys.go
 	@echo "✓ Keys generated in keys/ directory"
 	@echo "⚠️  Keep these keys secure! They are used to sign registry snapshots"
 
 ## run: Run the service
 run:
 	export CONFIG_PATH=${PWD}/config.yaml && \
-	cd ucrs && go run main.go
+	go run main.go
 
 ## build: Build the service binary
 build:
-	cd ucrs && go build -o capability_registry_service main.go
-	@echo "Binary created: ucrs/capability_registry_service"
+	go build -o capability_registry_service main.go
+	@echo "Binary created: capability_registry_service"
 
 ## test: Run tests
 test:
-	cd ucrs && go test ./... -v
+	go test ./... -v
 
 ## docs: Generate Swagger documentation
 docs:
-	cd ucrs && swag init -g main.go --output ./docs
-	@echo "Swagger docs generated in ucrs/docs/"
+	swag init -g main.go --output ./docs
+	@echo "Swagger docs generated in docs/"
 
 ## clean: Clean build artifacts
 clean:
-	rm -f ucrs/capability_registry_service
-	rm -rf ucrs/docs/
+	rm -f capability_registry_service
+	rm -rf docs/
 	@echo "Cleaned build artifacts"
 
 ## deps: Install dependencies
 deps:
-	cd ucrs && go mod download
-	cd ucrs && go mod tidy
+	go mod download
+	go mod tidy
 
 ## docker-up: Run with Docker Compose
 docker-up:

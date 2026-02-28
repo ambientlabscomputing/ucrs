@@ -1,5 +1,5 @@
 # Binaries and build artifacts
-service/capability_registry_service
+capability_registry_service
 *.exe
 *.dll
 *.so
