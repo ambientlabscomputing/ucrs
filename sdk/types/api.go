@@ -78,6 +78,20 @@ type SyncDeltaResponse struct {
 	Delta DeltaUpdate `json:"delta"`
 }
 
+// ==================== Source Resolution ====================
+
+// ResolveSourceRequest is the query for GET /sources/resolve
+type ResolveSourceRequest struct {
+	Source string `form:"source" binding:"required"` // e.g. "gh:owner/repo" or "gh:owner/repo@ref"
+	Ref    string `form:"ref"`                       // override ref (optional if encoded in Source)
+	Token  string `form:"token"`                     // GitHub PAT for private repos (optional)
+}
+
+// ResolveSourceResponse is returned by GET /sources/resolve
+type ResolveSourceResponse struct {
+	Resolved ResolvedSource `json:"resolved"`
+}
+
 // ListResponse is a generic response wrapper for list endpoints
 type ListResponse struct {
 	Items      interface{} `json:"items"`

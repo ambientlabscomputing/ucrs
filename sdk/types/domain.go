@@ -129,3 +129,72 @@ type DeltaUpdate struct {
 	RemovedProviders    []string       `json:"removed_providers" bson:"removed_providers" yaml:"removed_providers"` // Provider IDs
 	Manifest            SignedManifest `json:"manifest" bson:"manifest" yaml:"manifest"`
 }
+
+// ==================== App Manifest (GitHub source deploy) ====================
+
+// AppManifest is the schema for .underleaf/deploy.yaml placed in a GitHub repo.
+// It is target-agnostic: no org_id, no server targeting. Those are injected by server_api.
+type AppManifest struct {
+	Version  string            `json:"version" yaml:"version"`               // "1"
+	Name     string            `json:"name" yaml:"name"`                     // human-readable app name
+	Slug     string            `json:"slug,omitempty" yaml:"slug,omitempty"` // unique slug; auto-derived from name if empty
+	Services []ManifestService `json:"services" yaml:"services"`
+	Networks []ManifestNetwork `json:"networks,omitempty" yaml:"networks,omitempty"`
+	Volumes  []ManifestVolume  `json:"volumes,omitempty" yaml:"volumes,omitempty"`
+}
+
+// ManifestService describes a single container service in an AppManifest.
+// Exactly one of Image or Build must be set.
+type ManifestService struct {
+	Name        string            `json:"name" yaml:"name"`
+	Image       string            `json:"image,omitempty" yaml:"image,omitempty"`
+	Build       *ManifestBuild    `json:"build,omitempty" yaml:"build,omitempty"`
+	Ports       []string          `json:"ports,omitempty" yaml:"ports,omitempty"`
+	Environment map[string]string `json:"environment,omitempty" yaml:"environment,omitempty"`
+	Networks    []string          `json:"networks,omitempty" yaml:"networks,omitempty"`
+	Volumes     []string          `json:"volumes,omitempty" yaml:"volumes,omitempty"`
+	Expose      *ManifestExpose   `json:"expose,omitempty" yaml:"expose,omitempty"`
+}
+
+// ManifestBuild describes how to build a Docker image from source.
+type ManifestBuild struct {
+	Context    string            `json:"context,omitempty" yaml:"context,omitempty"`       // relative to repo root (default ".")
+	Dockerfile string            `json:"dockerfile,omitempty" yaml:"dockerfile,omitempty"` // default "Dockerfile"
+	Args       map[string]string `json:"args,omitempty" yaml:"args,omitempty"`
+}
+
+// ManifestExpose declares that a service should be publicly exposed.
+type ManifestExpose struct {
+	Port     int    `json:"port" yaml:"port"`
+	Hostname string `json:"hostname,omitempty" yaml:"hostname,omitempty"` // auto-assigned if empty
+}
+
+// ManifestNetwork defines a Docker network in an AppManifest.
+type ManifestNetwork struct {
+	Name   string `json:"name" yaml:"name"`
+	Driver string `json:"driver,omitempty" yaml:"driver,omitempty"` // default "bridge"
+}
+
+// ManifestVolume defines a Docker volume in an AppManifest.
+type ManifestVolume struct {
+	Name string `json:"name" yaml:"name"`
+}
+
+// ResolvedSource is the result of resolving a gh: source reference.
+type ResolvedSource struct {
+	Type       string      `json:"type"` // "github"
+	Owner      string      `json:"owner"`
+	Repo       string      `json:"repo"`
+	Ref        string      `json:"ref"`         // resolved ref (may differ from request if default branch was used)
+	ArchiveURL string      `json:"archive_url"` // tarball download URL (authenticated if private)
+	Manifest   AppManifest `json:"manifest"`
+	RepoMeta   RepoMeta    `json:"repo_meta"`
+}
+
+// RepoMeta carries public metadata about the resolved GitHub repo.
+type RepoMeta struct {
+	DefaultBranch string `json:"default_branch"`
+	Private       bool   `json:"private"`
+	Description   string `json:"description,omitempty"`
+	Stars         int    `json:"stars,omitempty"`
+}

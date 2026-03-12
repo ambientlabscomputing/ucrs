@@ -9,9 +9,10 @@ import (
 )
 
 type AppRouter struct {
-	engine   *gin.Engine
-	service  service.Service
-	settings *utils.Settings
+	engine    *gin.Engine
+	service   service.Service
+	settings  *utils.Settings
+	sourceSvc *service.SourceService
 }
 
 func NewAppRouter(ctx context.Context, svc service.Service, settings *utils.Settings) (*AppRouter, error) {
@@ -25,9 +26,10 @@ func NewAppRouter(ctx context.Context, svc service.Service, settings *utils.Sett
 	engine.Use(CORSMiddleware())
 
 	router := &AppRouter{
-		engine:   engine,
-		service:  svc,
-		settings: settings,
+		engine:    engine,
+		service:   svc,
+		settings:  settings,
+		sourceSvc: service.NewSourceService(),
 	}
 
 	// Initialize JWKS
@@ -87,5 +89,11 @@ func (r *AppRouter) setupRoutes(ctx context.Context) {
 		providersGroup.POST("", WriteAuthMiddleware(ctx, r.settings), r.CreateProviderHandler())
 		providersGroup.PUT("/:provider_id/:version", WriteAuthMiddleware(ctx, r.settings), r.UpdateProviderHandler())
 		providersGroup.DELETE("/:provider_id/:version", AdminAuthMiddleware(ctx, r.settings), r.DeleteProviderHandler())
+	}
+
+	// Source resolution endpoints (PUBLIC - token passed per-request for private repos)
+	sourcesGroup := r.engine.Group(basePath + "/sources")
+	{
+		sourcesGroup.GET("/resolve", resolveSourceHandler(r.sourceSvc))
 	}
 }
