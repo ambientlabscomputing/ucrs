@@ -73,6 +73,36 @@ providers:
     homepage: https://github.com/ambientlabscomputing/underleaf
     maintainer: Ambient Labs
 
+  - provider_id: underleaf.mcp-server
+    version: dev
+    capabilities:
+      - id: ai.mcp.tools
+        version_range: ^1.0
+    artifact:
+      type: binary
+      uri: https://github.com/ambientlabscomputing/mcp_server/releases/download/{version}/mcp-server-{os}-{arch}
+      digest: ""
+      checksums:
+        uri: https://github.com/ambientlabscomputing/mcp_server/releases/download/{version}/checksums.txt
+      supported_platforms:
+        - os: darwin
+          arch: amd64
+        - os: darwin
+          arch: arm64
+        - os: linux
+          arch: amd64
+        - os: linux
+          arch: arm64
+    trust_tier: official
+    sandbox_profile: standard
+    runtime_requirements:
+      launch_mode: on-demand
+      network:
+        - localhost
+    description: MCP Server - Exposes Underleaf capabilities as MCP tools for AI assistants and IDE agents (stdio transport, invoked on-demand by the IDE)
+    homepage: https://github.com/ambientlabscomputing/underleaf
+    maintainer: Ambient Labs
+
   - provider_id: underleaf.mma
     version: dev
     capabilities:

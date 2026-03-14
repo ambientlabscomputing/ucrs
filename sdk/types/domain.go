@@ -46,6 +46,17 @@ const (
 	ArtifactPyPI   ArtifactType = "pypi"   // Python package
 )
 
+// LaunchMode controls how the agent starts a provider after installation.
+type LaunchMode string
+
+const (
+	// LaunchModeDaemon starts the provider as a long-running supervised process (default).
+	LaunchModeDaemon LaunchMode = "daemon"
+	// LaunchModeOnDemand installs the binary to disk but does NOT auto-start it.
+	// The invoker (e.g. an IDE over stdio) starts the process on demand.
+	LaunchModeOnDemand LaunchMode = "on-demand"
+)
+
 // PlatformSpec represents a specific OS/architecture combination
 type PlatformSpec struct {
 	OS   string `json:"os" bson:"os" yaml:"os"`       // e.g., "darwin", "linux", "windows"
@@ -80,6 +91,7 @@ type RuntimeRequirements struct {
 	Args           []string          `json:"args,omitempty" bson:"args,omitempty" yaml:"args,omitempty"`                                  // Command-line arguments for binary providers
 	Port           int               `json:"port,omitempty" bson:"port,omitempty" yaml:"port,omitempty"`                                  // Port the provider listens on
 	HealthEndpoint string            `json:"health_endpoint,omitempty" bson:"health_endpoint,omitempty" yaml:"health_endpoint,omitempty"` // HTTP health check endpoint (e.g., "http://localhost:8080/health")
+	LaunchMode     LaunchMode        `json:"launch_mode,omitempty" bson:"launch_mode,omitempty" yaml:"launch_mode,omitempty"`             // Controls auto-start behaviour; empty or "daemon" = supervised process (default)
 }
 
 // Provider represents a capability provider in the registry

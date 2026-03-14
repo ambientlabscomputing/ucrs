@@ -54,3 +54,14 @@ capabilities:
       - publish
       - route
     permission_class: mesh.network
+
+  - id: ai.mcp.tools
+    version: 1.0.0
+    description: Expose Underleaf capabilities as MCP tools for AI assistants and IDE agents
+    risk_class: medium
+    allowed_verbs:
+      - list
+      - invoke
+      - query
+      - subscribe
+    permission_class: ai.tools
