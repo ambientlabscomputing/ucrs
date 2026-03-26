@@ -61,6 +61,6 @@ docker-logs:
 docker-build:
 	docker build -t ambientlabsjose/ucrs:develop .
 
-## docker-publish: Push new dev image
-docker-publish: docker-build
+## docker-push: Push new dev image
+docker-push: docker-build
 	docker push ambientlabsjose/ucrs:develop
