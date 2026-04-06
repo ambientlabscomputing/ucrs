@@ -153,6 +153,17 @@ type AppManifest struct {
 	Services []ManifestService `json:"services" yaml:"services"`
 	Networks []ManifestNetwork `json:"networks,omitempty" yaml:"networks,omitempty"`
 	Volumes  []ManifestVolume  `json:"volumes,omitempty" yaml:"volumes,omitempty"`
+
+	// Targeting allows deploy.yaml to declare placement preferences such as
+	// replicas count.  Merged with (and overridden by) CLI-level targeting.
+	Targeting *ManifestTargeting `json:"targeting,omitempty" yaml:"targeting,omitempty"`
+}
+
+// ManifestTargeting is the subset of targeting options that can be set in a
+// deploy.yaml manifest.  It intentionally exposes only high-level placement
+// knobs; full server/cluster targeting requires CLI flags.
+type ManifestTargeting struct {
+	Replicas *int `json:"replicas,omitempty" yaml:"replicas,omitempty"`
 }
 
 // ManifestService describes a single container service in an AppManifest.
